@@ -1,6 +1,5 @@
 import random
 
-
 def pp_board(board):
     print("------------")
     for row in range(0,4):
@@ -33,7 +32,6 @@ def is_game_over(board):
     if not equivalence_relation(board, move_right(board)):
         return False
     return True
-
 
 def random_square(board):
     locations = []
@@ -93,7 +91,6 @@ def merge_up_down(board, direction):
                         pointer = row
     return board
 
-
 def shift_left_right(board, direction):
     left, right = matrix_direction_indices(direction)
     for row in range(0,4):
@@ -144,12 +141,7 @@ def move_down(board):
     shift_up_down(return_board, -1)
     return return_board
 
-
-
-
-# TODO: Move Function, Hueristic, MiniMax, Alpha-Beta Pruning
 heuristic_multiplier = [[2**3, 2**4, 2**5, 2**6],[2**2, 2**3, 2**4, 2**5],[2**1, 2**2, 2**3, 2**4],[2**0, 2**1, 2**2, 2**3]]
-
 def heuristic(board):
     score = 0
     for row in range(0,4):
@@ -173,34 +165,23 @@ def generate_possible_computer_moves(board):
                 board[row][col] = 0
     return two_list, four_list
 
-
-# up, down, left, right
 def expecti_max(board, depth, is_user_turn):
     if depth == 5:
         return heuristic(board), 0
-
     if is_user_turn:
         max_score = -1
         index = 0
-
         possible_moves = generate_possible_user_moves(board)
-        # we want to know max score
-        # depth += 1
         for x in range(0, len(possible_moves)):
             score = expecti_max(possible_moves[x], depth+1, False)[0]
-            # pp_board(possible_moves[x])
-            # print(x, "score is", score)
             if score > max_score:
                 max_score = score
                 index = x
         return max_score, index
     else:
-        # depth += 1
         two_list, four_list = generate_possible_computer_moves(board)
-#         we want to know average score
         if len(two_list) == 0 or len(four_list) == 0:
             return 0,0
-
         two_average = 0
         for x in range(0,len(two_list)):
             two_average += expecti_max(two_list[x], depth+1, True)[0]
@@ -213,10 +194,9 @@ def expecti_max(board, depth, is_user_turn):
 
         return .10*four_average + .90*two_average, 0
 
+# run game
 board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 board = random_square(board)
-# pp_board(board)
-# print(expecti_max(board, 0, True))
 for i in range(0,50000):
     pp_board(board)
     print("Round", i+1, "SCORE:", heuristic(board))
@@ -230,14 +210,7 @@ for i in range(0,50000):
     else:
         board = move_right(board)
     board = random_square(board)
-
     if is_game_over(board):
         print("GAME IS OVER WITH SCORE", heuristic(board))
         pp_board(board)
         break
-
-
-
-
-
-
